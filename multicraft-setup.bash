@@ -13,7 +13,7 @@ echo -e "[SUCCESS] System updated!";
 echo -e "[INFO] Installing required packages...";
 apt-get -qq install apache2 mysql-server -y > /dev/null;
 
-if [ $(apt-get list --installed | grep "apache2") = "" ]; then
+if [ $(apt list --installed | grep "apache2") = "" ]; then
     echo -e "[FATAL] Something went wrong. Exiting...";
     exit 1;
 fi
@@ -26,7 +26,7 @@ echo -e "[SUCCESS] MySQL setup complete!";
 echo -e "[INFO] Installing more required packages...";
 apt-get -qq install php libapache2-mod-php php-mysql php-pdo php-sqlite3 php-curl php-xml php-gd default-jre default-jdk -y > /dev/null;
 
-if [ $(apt-get list --installed | grep "php") = "" ]; then
+if [ $(apt list --installed | grep "php") = "" ]; then
     echo -e "[FATAL] Something went wrong. Exiting...";
     exit 1;
 fi
