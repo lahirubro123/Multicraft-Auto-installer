@@ -78,6 +78,6 @@ echo -e "[SUCCESS] Apache configured correctly!"
 clear
 echo -e "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 echo -e "Now: "
-echo -e "- Navigatge to http://$(curl --silent https://ipinfo.io/ip)/multicraft, and continue setup!"
+echo -e "- Navigatge to http://$(curl --silent https://ipinfo.io/ip)/multicraft , and continue setup!"
 echo -e "- As of the latest version of this script, you DO NOT need to modify Apache's config!"
 echo -e "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
