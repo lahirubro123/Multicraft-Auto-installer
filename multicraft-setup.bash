@@ -16,6 +16,7 @@ apt-get -qq install apache2 mysql-server -y &> /dev/null;
 dpkg -s apache2 &> /dev/null
 if [ ! $? -eq 0 ]; then
     echo -e "[FATAL] Package install failed."
+    exit 1
 fi
 echo -e "[SUCCESS] Packages installed!";
 
@@ -30,6 +31,7 @@ apt-get -qq install php libapache2-mod-php php-mysql php-pdo php-sqlite3 php-cur
 dpkg -s php &> /dev/null
 if [ ! $? -eq 0 ]; then
     echo -e "[FATAL] Package install failed."
+    exit 1
 fi
 echo -e "[SUCCESS] Packages installed!";
 
