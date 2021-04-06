@@ -71,7 +71,17 @@ wget http://www.multicraft.org/files/multicraft.service -O /etc/systemd/system/m
 
 echo -e "[SUCCESS] Service file created and Multicraft enabled!";
 
-echo -e "---------------------------------------------"
-echo -e "Now: "
-echo -e "- Set AllowOverride to All for /var/www in /etc/apache2/apache2.conf, then reload Apache!";
-echo -e "- Navigatge to http://{YOUR IP}/multicraft, and continue setup!"
+echo -e "[INFO] Configuring Apache..."
+
+sed -i '172s/None/All/g' /etc/apache2/apache2.conf && systemctl reload apache2 && systemctl enable apache2;
+
+if (( $(ps -ef | grep -v grep | grep apache2 | wc -l) < 1 )); then
+    echo -e "[FATAL] Something went wrong. Exiting..."
+    exit 1;
+fi
+
+echo -e "[SUCCESS] Apache configured correctly!";
+
+clear;
+echo -e "Now: ";
+echo -e "- Navigatge to http://${HOSTNAME}/multicraft, and continue setup!"
