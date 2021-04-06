@@ -7,15 +7,15 @@ echo -e "Created by Josh Q";
 echo -e "------------------------------------------------";
 
 echo -e "[INFO] Updating system...";
-apt-get -qq update && apt-get -qq upgrade -y > /dev/null;
+apt-get -qq update && apt-get -qq upgrade -y &> /dev/null;
 echo -e "[SUCCESS] System updated!";
 
 echo -e "[INFO] Installing required packages...";
-apt-get -qq install apache2 mysql-server -y > /dev/null;
+apt-get -qq install apache2 mysql-server -y &> /dev/null;
 
-if [ $(apt list --installed | grep "apache2") = "" ]; then
-    echo -e "[FATAL] Something went wrong. Exiting...";
-    exit 1;
+dpkg -s apache2 &> /dev/null
+if [ ! $? -eq 0 ]; then
+    echo -e "[FATAL] Package install failed."
 fi
 echo -e "[SUCCESS] Packages installed!";
 
@@ -23,12 +23,13 @@ echo -e "[INFO] Starting MySQL setup...";
 mysql_secure_installation;
 echo -e "[SUCCESS] MySQL setup complete!";
 
+clear;
 echo -e "[INFO] Installing more required packages...";
-apt-get -qq install php libapache2-mod-php php-mysql php-pdo php-sqlite3 php-curl php-xml php-gd default-jre default-jdk -y > /dev/null;
+apt-get -qq install php libapache2-mod-php php-mysql php-pdo php-sqlite3 php-curl php-xml php-gd default-jre default-jdk -y &> /dev/null;
 
-if [ $(apt list --installed | grep "php") = "" ]; then
-    echo -e "[FATAL] Something went wrong. Exiting...";
-    exit 1;
+dpkg -s php &> /dev/null
+if [ ! $? -eq 0 ]; then
+    echo -e "[FATAL] Package install failed."
 fi
 echo -e "[SUCCESS] Packages installed!";
 
@@ -49,11 +50,11 @@ read -p "Enter your database password (the last one you specified): " dbpass;
 echo -e " ";
 
 echo -e "[INFO] Setting up database..."
-mysql -e "create database multicraft_panel" > /dev/null;
+mysql -e "create database multicraft_panel" &> /dev/null;
 mysql -e "create database multicraft_daemon" > /dev/null;
-mysql -e "create user 'multicraft'@'localhost' identified by '${dbpass}'" > /dev/null;
-mysql -e "grant all privileges on multicraft_panel.* to 'multicraft'@'localhost'" > /dev/null;
-mysql -e "grant all privileges on multicraft_daemon.* to 'multicraft'@'localhost'" > /dev/null;
+mysql -e "create user 'multicraft'@'localhost' identified by '${dbpass}'" &> /dev/null;
+mysql -e "grant all privileges on multicraft_panel.* to 'multicraft'@'localhost'" &> /dev/null;
+mysql -e "grant all privileges on multicraft_daemon.* to 'multicraft'@'localhost'" &> /dev/null;
 echo -e "[SUCCESS] Databases have been setup!";
 
 echo -e "[INFO] Setting up Systemd service..."
