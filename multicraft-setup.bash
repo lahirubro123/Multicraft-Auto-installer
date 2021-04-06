@@ -3,11 +3,9 @@
 clear;
 echo -e "------------------------------------------------"
 echo -e "   Server.pro Multicraft Installation Script    "
-echo -e "              Created by Josh Q                 "
-echo -e " "
+echo -e "              Created by Josh Q                 \n"
 echo -e " DO NOT CLOSE THE SHELL TAB THROUGHOUT PROCESS! "
-echo -e "------------------------------------------------"
-echo -e " "
+echo -e "------------------------------------------------\n"
 
 echo -e "[INFO] Updating system..."
 apt-get -qq update && apt-get -qq upgrade -y &> /dev/null
@@ -44,21 +42,18 @@ if [ ! -f ./multicraft.tar.gz ]; then
     echo -e "[FATAL] Download of Multicraft failed."
     exit 1;
 fi
-echo -e "[SUCCESS] Multicraft downloaded. Prepare to complete configuration!"
+echo -e "[SUCCESS] Multicraft downloaded. Prepare to complete configuration!\n"
 tar xvzf multicraft.tar.gz &> /dev/null
 cd multicraft
-echo -e " "
 ./setup.sh
-echo -e " "
-read -p "Enter your database password (the last one you specified): " dbpass
-echo -e " "
+read -p "\nEnter your database password (the last one you specified): " dbpass
 
-echo -e "[INFO] Setting up database..."
-mysql -e "create database multicraft_panel"
-mysql -e "create database multicraft_daemon"
-mysql -e "create user 'multicraft'@'localhost' identified by '${dbpass}'"
-mysql -e "grant all privileges on multicraft_panel.* to 'multicraft'@'localhost'"
-mysql -e "grant all privileges on multicraft_daemon.* to 'multicraft'@'localhost'"
+echo -e "\n[INFO] Setting up database..."
+mysql -e "create database multicraft_panel" &> /dev/null
+mysql -e "create database multicraft_daemon" &> /dev/null
+mysql -e "create user 'multicraft'@'localhost' identified by '${dbpass}'" &> /dev/null
+mysql -e "grant all privileges on multicraft_panel.* to 'multicraft'@'localhost'" &> /dev/null
+mysql -e "grant all privileges on multicraft_daemon.* to 'multicraft'@'localhost'" &> /dev/null
 echo -e "[SUCCESS] Databases have been setup!"
 
 echo -e "[INFO] Setting up Systemd service..."
