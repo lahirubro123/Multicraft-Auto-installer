@@ -54,11 +54,11 @@ read -p "Enter your database password (the last one you specified): " dbpass
 echo -e " "
 
 echo -e "[INFO] Setting up database..."
-mysql -e "create database multicraft_panel" &> /dev/null
-mysql -e "create database multicraft_daemon" &> /dev/null
-mysql -e "create user 'multicraft'@'localhost' identified by '${dbpass}'" &> /dev/null
-mysql -e "grant all privileges on multicraft_panel.* to 'multicraft'@'localhost'" &> /dev/null
-mysql -e "grant all privileges on multicraft_daemon.* to 'multicraft'@'localhost'" &> /dev/null
+mysql -e "create database multicraft_panel"
+mysql -e "create database multicraft_daemon"
+mysql -e "create user 'multicraft'@'localhost' identified by '${dbpass}'"
+mysql -e "grant all privileges on multicraft_panel.* to 'multicraft'@'localhost'"
+mysql -e "grant all privileges on multicraft_daemon.* to 'multicraft'@'localhost'"
 echo -e "[SUCCESS] Databases have been setup!"
 
 echo -e "[INFO] Setting up Systemd service..."
@@ -83,6 +83,6 @@ echo -e "[SUCCESS] Apache configured correctly!"
 clear
 echo -e "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 echo -e "Now: "
-echo -e "- Navigatge to http://${HOSTNAME}/multicraft, and continue setup!"
+echo -e "- Navigatge to http://$(curl --silent https://ipinfo.io/ip)/multicraft, and continue setup!"
 echo -e "- As of the latest version of this script, you DO NOT need to modify Apache's config!"
 echo -e "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
