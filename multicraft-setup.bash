@@ -75,6 +75,11 @@ if [ ! -f ./multicraft-install.exp ]; then
     exit 1;
 fi
 
+# Create required vars
+export IPV4=$(ipinfo.io/ip)
+export DAEMONUSR_PWD=$(openssl rand -base64 30)
+export DAEMONDB_PWD=$(openssl rand -base64 30)
+
 # Run Expect script
 chmod +x ./multicraft-install.exp
 ./multicraft-install.exp
