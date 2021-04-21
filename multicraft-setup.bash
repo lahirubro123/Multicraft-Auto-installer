@@ -25,7 +25,7 @@ echo -e "[SUCCESS] Packages installed!"
 echo -e "[INFO] Configuring MySQL server..."
 
 # Generate random password for root MySQL user
-mysql_root_password=$(openssl rand -base64 30)
+export MYSQL_ROOT_PWD=$(openssl rand -base64 30)
 
 if [ ! mysqladmin --user=root status > /dev/null 2>&1 ]; then
     echo -e "[FATAL] MySQL root password already set. Exiting..."
@@ -35,7 +35,7 @@ fi
 # Run queries, as in mysql_secure_installation => 
 #    https://github.com/MariaDB/server/blob/5.5/scripts/mysql_secure_installation.sh
 mysql --user=root <<_EOF_
-    UPDATE mysql.user SET Password=PASSWORD('${mysql_root_password}') WHERE User='root';
+    UPDATE mysql.user SET Password=PASSWORD('${MYSQL_ROOT_PWD}') WHERE User='root';
     DELETE FROM mysql.user WHERE User='';
     DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
     DROP DATABASE IF EXISTS test;
@@ -85,13 +85,10 @@ chmod +x ./multicraft-install.exp
 ./multicraft-install.exp
 
 # Post-Multicraft-install steps
-echo " "
-read -p "Enter your database password (the last one you specified): " dbpass
-
 echo -e "\n[INFO] Setting up database..."
 mysql -e "create database multicraft_panel" &> /dev/null
 mysql -e "create database multicraft_daemon" &> /dev/null
-mysql -e "create user 'multicraft'@'localhost' identified by '${dbpass}'" &> /dev/null
+mysql -e "create user 'multicraft'@'localhost' identified by '${DAEMONDB_PWD}'" &> /dev/null
 mysql -e "grant all privileges on multicraft_panel.* to 'multicraft'@'localhost'" &> /dev/null
 mysql -e "grant all privileges on multicraft_daemon.* to 'multicraft'@'localhost'" &> /dev/null
 echo -e "[SUCCESS] Databases have been setup!"
@@ -119,7 +116,13 @@ echo -e "[SUCCESS] Apache configured correctly!"
 
 clear
 echo -e "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-echo -e "Now: "
-echo -e "- Navigatge to http://$(curl --silent https://ipinfo.io/ip)/multicraft , and continue setup!"
+echo -e "NOW: "
+echo -e "- Navigatge to http://${IPV4}/multicraft and continue setup!"
 echo -e "- As of the latest version of this script, you DO NOT need to modify Apache's config!"
+echo -e ""
+echo -e "Credentials (save this in a safe place):"
+echo -e "- Your MySQL root user's password is: ${MYSQL_ROOT_PWD}"
+echo -e "- Your Daemon password is: ${DAEMONUSR_PWD}"
+echo -e "- Your database user's username is: multicraft"
+echo -e "- Your database user's password is: ${DAEMONDB_PWD}"
 echo -e "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
