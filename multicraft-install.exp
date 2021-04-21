@@ -33,9 +33,45 @@ expect "files: \\\[/var/www/html/multicraft\\\] "
 send -- "/var/www/html/multicraft\r"
 
 expect "panel installer) \\\[none\\\] "
-send -- "$::env(daemon_password)\r"
+send -- "$::env(DAEMONUSR_PWD)\r"
 
 expect "server? \\\[y\\\]/n "
 send -- "y\r"
+
+expect "s): \\\[$::env(IPV4)\\\] "
+send -- "$::env(IPV4)\r"
+
+expect "port: \\\[21\\\] "
+send -- "21\r"
+
+expect "plugins)? \\\[n\\\]/y "
+send -- "n\r"
+
+expect "mysql "
+send -- "mysql\r"
+
+expect "\\\[127.0.0.1\\\] "
+send -- "\r"
+
+expect "\\\[multicraft_daemon\\\] "
+send -- "\r"
+
+expect "\\\[root\\\] "
+send -- "multicraft\r"
+
+expect "\\\[\\\] "
+send -- "$::env(DAEMONDB_PWD)\r"
+
+expect "zip\\\] "
+send -- "\r"
+
+expect "installation? \\\[y\\\]/n "
+send -- "\r"
+
+expect "continue."
+send -- "\r"
+
+expect "settings? (\\\[y\\\]/n) "
+send -- "\r"
  
 expect eof
