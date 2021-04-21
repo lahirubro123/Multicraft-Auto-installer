@@ -12,7 +12,7 @@ apt-get -qq update && apt-get -qq upgrade -y &> /dev/null
 echo -e "[SUCCESS] System updated!"
 
 echo -e "[INFO] Installing required packages..."
-apt-get -qq install apache2 mysql-server -y &> /dev/null
+apt-get -qq install apache2 mysql-server expect -y &> /dev/null
 
 # Check if packages were installed
 dpkg -s apache2 &> /dev/null
@@ -67,8 +67,17 @@ echo -e "[SUCCESS] Multicraft downloaded. Prepare to complete configuration!\n"
 tar xvzf multicraft.tar.gz &> /dev/null
 cd multicraft
 
-# Run Multicraft installer
-./setup.sh
+# Download Expect script for Multicraft auto-install
+wget --quiet https://github.com/Server-pro/Scripts/automysql/multicraft-install.exp -O multicraft-install.exp
+
+if [ ! -f ./multicraft-install.exp ]; then
+    echo -e "[FATAL] Download of Expect script failed."
+    exit 1;
+fi
+
+# Run Expect script
+chmod +x ./multicraft-install.exp
+./multicraft-install.exp
 
 # Post-Multicraft-install steps
 echo " "
