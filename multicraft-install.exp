@@ -1,0 +1,41 @@
+#!/usr/bin/expect -f
+ 
+set timeout -1
+ 
+# Run Multicraft installer
+spawn ./setup.sh
+ 
+expect "create system users): \\\[y\\\]/n "
+send -- "y\r"
+ 
+expect "Run Multicraft under this user:  \\\[minecraft\\\] "
+send -- "minecraft\r"
+ 
+expect "'minecraft' on start of installation? \\\[y\\\]/n "
+send -- "y\r"
+
+expect "in: \\\[/home/minecraft/multicraft\\\] "
+send -- "/home/minecraft/multicraft\r"
+
+expect "enter it now: \\\[no\\\] "
+send -- "no\r"
+
+expect "Daemon number? \\\[1\\\] "
+send -- "1\r"
+
+expect "panel run on this machine? \\\[y\\\]/n "
+send -- "y\r"
+
+expect "webserver: \\\[www-data\\\] "
+send -- "y\r"
+
+expect "files: \\\[/var/www/html/multicraft\\\] "
+send -- "/var/www/html/multicraft\r"
+
+expect "panel installer) \\\[none\\\] "
+send -- "$::env(daemon_password)\r"
+
+expect "server? \\\[y\\\]/n "
+send -- "y\r"
+ 
+expect eof
