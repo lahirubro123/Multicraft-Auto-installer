@@ -14,6 +14,7 @@ echo -e "[SUCCESS] System updated!"
 echo -e "[INFO] Installing required packages..."
 apt-get -qq install apache2 mysql-server -y &> /dev/null
 
+# Check if packages were installed
 dpkg -s apache2 &> /dev/null
 if [ ! $? -eq 0 ]; then
     echo -e "[FATAL] Package install failed."
@@ -21,13 +22,33 @@ if [ ! $? -eq 0 ]; then
 fi
 echo -e "[SUCCESS] Packages installed!"
 
-echo -e "[INFO] Starting MySQL setup..."
-mysql_secure_installation
+echo -e "[INFO] Configuring MySQL server..."
+
+# Generate random password for root MySQL user
+mysql_root_password=$(openssl rand -base64 30)
+
+if [ ! mysqladmin --user=root status > /dev/null 2>&1 ]; then
+    echo -e "[FATAL] MySQL root password already set. Exiting..."
+    exit 1
+fi
+
+# Run queries, as in mysql_secure_installation => 
+#    https://github.com/MariaDB/server/blob/5.5/scripts/mysql_secure_installation.sh
+mysql --user=root <<_EOF_
+    UPDATE mysql.user SET Password=PASSWORD('${mysql_root_password}') WHERE User='root';
+    DELETE FROM mysql.user WHERE User='';
+    DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
+    DROP DATABASE IF EXISTS test;
+    DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
+    FLUSH PRIVILEGES;
+_EOF_
+
 echo -e "\n[SUCCESS] MySQL setup complete!"
 
 echo -e "[INFO] Installing more required packages..."
 apt-get -qq install php libapache2-mod-php php-mysql php-pdo php-sqlite3 php-curl php-xml php-gd default-jre default-jdk -y &> /dev/null
 
+# Check if packages were installed
 dpkg -s php &> /dev/null
 if [ ! $? -eq 0 ]; then
     echo -e "[FATAL] Package install failed."
@@ -45,7 +66,11 @@ fi
 echo -e "[SUCCESS] Multicraft downloaded. Prepare to complete configuration!\n"
 tar xvzf multicraft.tar.gz &> /dev/null
 cd multicraft
+
+# Run Multicraft installer
 ./setup.sh
+
+# Post-Multicraft-install steps
 echo " "
 read -p "Enter your database password (the last one you specified): " dbpass
 
@@ -67,8 +92,10 @@ fi
 echo -e "[SUCCESS] Service file created and Multicraft enabled!"
 
 echo -e "[INFO] Configuring Apache..."
+# Use .htaccess
 sed -i '172s/None/All/g' /etc/apache2/apache2.conf && systemctl reload apache2 && systemctl enable apache2
 
+# Check that Apache is running
 if (( $(ps -ef | grep -v grep | grep apache2 | wc -l) < 1 )); then
     echo -e "[FATAL] Something went wrong. Exiting..."
     exit 1
