@@ -25,7 +25,7 @@ echo -e "[SUCCESS] Packages installed!"
 echo -e "[INFO] Configuring MySQL server..."
 
 # Generate random password for root MySQL user
-export MYSQL_ROOT_PWD=$(openssl rand --base64 30)
+export MYSQL_ROOT_PWD=$(openssl rand -hex 30)
 
 if [ ! mysqladmin --user=root status > /dev/null 2>&1 ]; then
     echo -e "[FATAL] MySQL root password already set. Exiting..."
@@ -77,8 +77,8 @@ fi
 
 # Create required vars
 export IPV4=$(ipinfo.io/ip)
-export DAEMONUSR_PWD=$(openssl rand -base64 30)
-export DAEMONDB_PWD=$(openssl rand -base64 30)
+export DAEMONUSR_PWD=$(openssl rand -hex 30)
+export DAEMONDB_PWD=$(openssl rand -hex 30)
 
 # Run Expect script
 chmod +x ./multicraft-install.exp
