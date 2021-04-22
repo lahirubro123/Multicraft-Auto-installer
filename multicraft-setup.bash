@@ -43,7 +43,7 @@ mysql --user=root <<_EOF_
     FLUSH PRIVILEGES;
 _EOF_
 
-echo -e "\n[SUCCESS] MySQL setup complete!"
+echo -e "[SUCCESS] MySQL setup complete!"
 
 echo -e "[INFO] Installing more required packages..."
 apt-get -qq install php libapache2-mod-php php-mysql php-pdo php-sqlite3 php-curl php-xml php-gd default-jre default-jdk -y &> /dev/null
@@ -76,7 +76,7 @@ if [ ! -f ./multicraft-install.exp ]; then
 fi
 
 # Create required vars
-export IPV4=$(ipinfo.io/ip)
+export IPV4=$(curl http://ipinfo.io/ip)
 export DAEMONUSR_PWD=$(openssl rand -hex 30)
 export DAEMONDB_PWD=$(openssl rand -hex 30)
 
