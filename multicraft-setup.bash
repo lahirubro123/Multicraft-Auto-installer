@@ -25,7 +25,7 @@ echo -e "[SUCCESS] Packages installed!"
 echo -e "[INFO] Configuring MySQL server..."
 
 # Generate random password for root MySQL user
-export MYSQL_ROOT_PWD=$(openssl rand --base64 30)
+MYSQL_ROOT_PWD=$(openssl rand --base64 30)
 
 if [ ! mysqladmin --user=root status > /dev/null 2>&1 ]; then
     echo -e "[FATAL] MySQL root password already set. Exiting..."
