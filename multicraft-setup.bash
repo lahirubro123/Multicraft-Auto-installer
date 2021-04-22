@@ -26,8 +26,6 @@ echo -e "[INFO] Configuring MySQL server..."
 
 # Generate random password for root MySQL user
 export MYSQL_ROOT_PWD=$(openssl rand --base64 30)
-echo $MYSQL_ROOT_PWD
-exit 1
 
 if [ ! mysqladmin --user=root status > /dev/null 2>&1 ]; then
     echo -e "[FATAL] MySQL root password already set. Exiting..."
@@ -38,6 +36,8 @@ fi
 #    https://github.com/MariaDB/server/blob/5.5/scripts/mysql_secure_installation.sh
 mysql --user=root <<_EOF_
     UPDATE mysql.user SET Password=PASSWORD('${MYSQL_ROOT_PWD}') WHERE User='root';
+_EOF_
+exit 1
     DELETE FROM mysql.user WHERE User='';
     DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
     DROP DATABASE IF EXISTS test;
