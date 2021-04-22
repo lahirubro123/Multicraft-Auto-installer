@@ -114,7 +114,6 @@ fi
 
 echo -e "[SUCCESS] Apache configured correctly!"
 
-clear
 echo -e "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 echo -e "NOW: "
 echo -e "- Navigatge to http://${IPV4}/multicraft and continue setup!"
