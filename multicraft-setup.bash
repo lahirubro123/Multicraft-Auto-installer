@@ -35,7 +35,7 @@ fi
 # Run queries, as in mysql_secure_installation => 
 #    https://github.com/MariaDB/server/blob/5.5/scripts/mysql_secure_installation.sh
 mysql --user=root <<_EOF_
-    UPDATE mysql.user SET Password=PASSWORD('${MYSQL_ROOT_PWD}') WHERE User='root';
+    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MYSQL_ROOT_PWD}';
     DELETE FROM mysql.user WHERE User='';
     DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
     DROP DATABASE IF EXISTS test;
