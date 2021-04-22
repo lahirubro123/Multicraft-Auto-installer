@@ -7,10 +7,6 @@ echo -e "              Created by Josh Q                 \n"
 echo -e " DO NOT CLOSE THE SHELL TAB THROUGHOUT PROCESS! "
 echo -e "------------------------------------------------\n"
 
-function random-string() {
-    cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w ${1:-32} | head -n 1
-}
-
 echo -e "[INFO] Updating system..."
 apt-get -qq update && apt-get -qq upgrade -y &> /dev/null
 echo -e "[SUCCESS] System updated!"
@@ -29,7 +25,7 @@ echo -e "[SUCCESS] Packages installed!"
 echo -e "[INFO] Configuring MySQL server..."
 
 # Generate random password for root MySQL user
-export MYSQL_ROOT_PWD=$(random-string)
+export MYSQL_ROOT_PWD=$(openssl rand --base64 30)
 echo $MYSQL_ROOT_PWD
 exit 1
 
