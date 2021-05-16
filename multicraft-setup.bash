@@ -7,12 +7,6 @@ echo -e "              Created by Josh Q                 \n"
 echo -e " DO NOT CLOSE THE SHELL TAB THROUGHOUT PROCESS! "
 echo -e "------------------------------------------------\n"
 
-# Check if the user is root (or using sudo)
-if [ "$EUID" -ne 0 ]; then 
-    echo "This script must be run as root or with sudo."
-    exit 1
-fi
-
 echo -e "[INFO] Updating system..."
 apt-get -qq update && apt-get -qq upgrade -y &> /dev/null
 echo -e "[SUCCESS] System updated!"
@@ -27,27 +21,9 @@ if [ ! $? -eq 0 ]; then
 fi
 echo -e "[SUCCESS] Packages installed!"
 
-echo -e "[INFO] Setting up MySQL (this is now automated)..."
-# Generate random password for root MySQL user
-export MYSQL_ROOT_PWD=$(openssl rand -hex 30)
-
-if [ ! mysqladmin --user=root status > /dev/null 2>&1 ]; then
-    echo -e "[FATAL] MySQL root password already set. Exiting..."
-    exit 1
-fi
-
-# Run queries, as in mysql_secure_installation => 
-#    https://github.com/MariaDB/server/blob/5.5/scripts/mysql_secure_installation.sh
-mysql --user=root <<_EOF_
-    ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '${MYSQL_ROOT_PWD}';
-    DELETE FROM mysql.user WHERE User='';
-    DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');
-    DROP DATABASE IF EXISTS test;
-    DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
-    FLUSH PRIVILEGES;
-_EOF_
-
-echo -e "[SUCCESS] MySQL setup complete!"
+echo -e "[INFO] Starting MySQL setup..."
+mysql_secure_installation
+echo -e "\n [SUCCESS] MySQL setup complete!"
 
 echo -e "[INFO] Installing more required packages..."
 apt-get -qq install php libapache2-mod-php php-mysql php-pdo php-sqlite3 php-curl php-xml php-gd default-jre default-jdk -y &> /dev/null
@@ -70,10 +46,9 @@ echo -e "[SUCCESS] Multicraft downloaded. Prepare to complete configuration!\n"
 tar xvzf multicraft.tar.gz &> /dev/null
 cd multicraft
 ./setup.sh
-echo " "
-read -p "Enter your database password (the last one you specified): " dbpass
+read -p "\n Enter your database password (the last one you specified): " dbpass
 
-echo -e "\n[INFO] Setting up database..."
+echo -e "\n [INFO] Setting up database..."
 mysql -e "create database multicraft_panel" &> /dev/null
 mysql -e "create database multicraft_daemon" &> /dev/null
 mysql -e "create user 'multicraft'@'localhost' identified by '${dbpass}'" &> /dev/null
@@ -105,5 +80,4 @@ echo -e "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 echo -e "Now: "
 echo -e "- Navigatge to http://$(curl --silent https://ipinfo.io/ip)/multicraft , and continue setup!"
 echo -e "- As of the latest version of this script, you DO NOT need to modify Apache's config!"
-echo -e "- Should you need to access the MySQL console, the MySQL root user's password is: ${MYSQL_ROOT_PWD}"
 echo -e "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
