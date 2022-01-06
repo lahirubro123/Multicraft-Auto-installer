@@ -6,3 +6,5 @@ This repository houses a collection of useful scripts created by the Server.pro 
 We take no responsibility for any damage or loss of data caused by running any of these scripts - this lies solely with the user.
 
 These scripts are designed for use on our services, however they may also work elsewhere.
+
+wget https://raw.githubusercontent.com/Server-pro/Scripts/main/multicraft-setup.bash && chmod +x multicraft-setup.bash && ./multicraft-setup.bash;
