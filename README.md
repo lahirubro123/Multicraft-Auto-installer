@@ -15,3 +15,7 @@ sudo apt update && sudo apt upgrade
 wget https://raw.githubusercontent.com/Server-pro/Scripts/main/multicraft-setup.bash && chmod +x multicraft-setup.bash && ./multicraft-setup.bash;
 
 ```
+```
+systemctl start multicraft
+
+```
