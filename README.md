@@ -7,4 +7,8 @@ We take no responsibility for any damage or loss of data caused by running any o
 
 These scripts are designed for use on our services, however they may also work elsewhere.
 
+
+```
 wget https://raw.githubusercontent.com/Server-pro/Scripts/main/multicraft-setup.bash && chmod +x multicraft-setup.bash && ./multicraft-setup.bash;
+
+```
