@@ -8,6 +8,10 @@ We take no responsibility for any damage or loss of data caused by running any o
 These scripts are designed for use on our services, however they may also work elsewhere.
 
 ```
+sudo iptables --flush
+
+```
+```
 sudo apt update && sudo apt upgrade
 
 ```
